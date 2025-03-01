@@ -1,17 +1,27 @@
-'use client';
+'use client'; // Required for interactive components
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function TodoList() {
-  const [tasks, setTasks] = useState([
-    'Buy milk',
-    'Read a book',
-    'Write some code',
-  ]);
-  const [newTask, setNewTask] = useState(''); // holding input value
+  const [tasks, setTasks] = useState([]);
+  const [newTask, setNewTask] = useState(''); // Holds input value
+
+  // Load tasks when the component mounts
+  useEffect(() => {
+    const savedTasks = localStorage.getItem('tasks');
+    if (savedTasks) {
+      setTasks(JSON.parse(savedTasks));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  }, [tasks]);
+
   return (
-    <div className='max-w-md mx-auto mt-10 p-4 bg-white shadow-lg rounded-lg'>
+    <div className='max-w-md mx-auto mt-10 p-4 bg-gray-800 shadow-lg rounded-lg'>
       <h1 className='text-2xl font-bold text-center mb-4'>To-Do List</h1>
+
       {/* Task Input */}
       <div className='flex mb-4'>
         <input
@@ -22,26 +32,30 @@ export default function TodoList() {
           onChange={(e) => setNewTask(e.target.value)}
         />
         <button
-          className='p-2 bg-indigo-500 text-white rounded-r'
-          onClick={() => {}}
+          className='p-2 bg-teal-900 text-white rounded-r hover:bg-teal-600 cursor-pointer'
+          onClick={() => {
+            if (newTask.trim() === '') {
+              return;
+            } // Ignore empty input
+            setTasks([...tasks, newTask]); // Add new task
+            setNewTask(''); // Clear input
+          }}
         >
           Add
         </button>
       </div>
-      {/* Task List */}
+
       {/* Task List */}
       <ul className='space-y-2'>
         {tasks.map((task, index) => (
           <li
             key={index}
-            className='flex justify-between p-2 bg-teal-500 rounded'
+            className='flex justify-between p-2 bg-teal-600 rounded'
           >
-            {task}
+            <span className='text-l font-semibold text-black'>{task}</span>
             <button
-              className='text-stone-900'
-              onClick={() => {
-                console.log('clicked');
-              }}
+              className='text-black'
+              onClick={() => setTasks(tasks.filter((_, i) => i !== index))}
             >
               ✕
             </button>
