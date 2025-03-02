@@ -52,7 +52,16 @@ export default function TodoList() {
             key={index}
             className='flex justify-between p-2 bg-teal-600 rounded'
           >
-            <span className='text-l font-semibold text-black'>{task}</span>
+            <input
+              type='text'
+              className='text-l font-semibold text-black bg-transparent outline-none'
+              value={task}
+              onChange={(e) => {
+                const newTasks = [...tasks];
+                newTasks[index] = e.target.value;
+                setTasks(newTasks);
+              }}
+            />
             <button
               className='text-black cursor-pointer'
               onClick={() => setTasks(tasks.filter((_, i) => i !== index))}
