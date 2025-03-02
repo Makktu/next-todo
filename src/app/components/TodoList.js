@@ -54,7 +54,7 @@ export default function TodoList() {
           >
             <span className='text-l font-semibold text-black'>{task}</span>
             <button
-              className='text-black'
+              className='text-black cursor-pointer'
               onClick={() => setTasks(tasks.filter((_, i) => i !== index))}
             >
               ✕
